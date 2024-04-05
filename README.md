@@ -24,7 +24,7 @@ https://steamcommunity.com/search/users/#text=%D0%A2%D1%83%D1%82+%D0%BD%D0%B8%D0
 
 ## Instalation
 ```poweshell
-git clone https://
+git clone https://github.com/sharik-game/steam_nick_parser.git
 pip install -r requirements.txt
 ```
 
