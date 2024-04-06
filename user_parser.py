@@ -45,11 +45,13 @@ def parse_users(res: str) -> list[config.User]:
     user = config.User(user_list[0], "", location, name, link, form_user_profile_link(link), [])
     profile_links.append(user)
   return profile_links
+
 def parse_desc(html: str):
   soup = BeautifulSoup(html, features="lxml")
   try: desc = soup.find("div", class_="profile_summary").text.strip() # type: ignore
   except AttributeError: desc = ""
   return desc
+
 async def make_req(session: aiohttp.ClientSession, url: str, return_json: bool = False, urls_bar: tqdm.tqdm | None = None):
   res: aiohttp.ClientResponse = await session.get(url)
   if not res.ok: raise Exception(f"response code: {res.status}, response: {res.text}")
@@ -94,7 +96,6 @@ async def get_user_profile(session: aiohttp.ClientSession, user_profiles_queue: 
         raw_users[i][j][k].other_nicknames.append(current_other_nickname)
     except Exception as ex:
       print(f"Error: {ex}, link: {user_profile_link}")
-      # raw_users[i][j][k].append([])
     user_profiles_queue.task_done()
 
 async def get_pages(session: aiohttp.ClientSession, urls_queue: asyncio.Queue, urls_bar: tqdm.tqdm):
@@ -132,7 +133,6 @@ async def get_data(nickname: str, coroutines: int = 4, delay: float = 0.2):
   cancel_tasks(user_profiles_getter)
   await session.close()
   if config.DEBUG >= 2: urls_bar.close()
-
   if config.DEBUG >= 4:
     with open("output.txt", "w", encoding="utf-8") as file: file.write(str(raw_users))
     print("Writing in file output2.txt was successfull")
